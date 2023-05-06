@@ -1,0 +1,62 @@
+OUTPUT_DIR: "../pth/market1501/scp_cat_mse"
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: '../models/resnet50-19c8e357.pth' #'../models/osnet_x1_0_imagenet.pth' #
+  USE_CHECKPOINT: 'on'
+  CHECKPOINT: '../pth/resnet50_nl_market95.8.pth'
+  CENTER_LOSS: 'on'
+  CENTER_FEAT_DIM: 2048          #2048
+  NAME: 'resnet50_scp_nl'
+  WEIGHT_REGULARIZED_TRIPLET: 'on'
+  GENERALIZED_MEAN_POOL: 'on'
+  DEVICE_ID: 0
+
+INPUT:
+  IMG_SIZE: [256, 128]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+
+DATASETS:
+  NAMES: ('partial_reid')
+
+DATALOADER:
+  PK_SAMPLER: 'on'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'Adam'
+  MAX_EPOCHS: 100
+  BASE_LR: 0.00035
+
+  CENTER_LR: 0.5 #0.5
+  CENTER_LOSS_WEIGHT: 0.0005 #0.0005 #
+  TRIPLET_LOSS_WEIGHT: 1.0 #
+  ESCP_LOSS_WEIGHT: 12.0
+  WEIGHT_DECAY: 0.0005    #原参数0.0005
+  IMS_PER_BATCH: 64
+
+  STEPS: [40, 70]
+  GAMMA: 0.1
+
+  WARMUP_FACTOR: 0.01
+  WARMUP_ITERS: 10
+  WARMUP_METHOD: 'linear'
+
+  CHECKPOINT_PERIOD: 10
+  LOG_PERIOD: 20
+  EVAL_PERIOD: 10
+
+TEST:
+  IMS_PER_BATCH: 128
+  RE_RANKING: 'off'
+  WEIGHT: "../pth/resnet50_nl_market95.8.pth"
+  FEAT_NORM: 'on'
+  EVALUATE_ONLY: 'off'
+  PARTIAL_REID: 'off'
+  VISUAL_RANK: 'off'
+
+
+
+
